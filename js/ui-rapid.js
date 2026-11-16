@@ -6,8 +6,8 @@
   const rapidAns = () => { const R = A.S.rapid, q = D.RAPID[R.idx]; return R.ans[q.id] || (R.ans[q.id] = { first: null, final: null, conf: null }); };
   A.onPick.rapid = (v) => { const a = rapidAns(); if (!a.first) a.first = v; a.final = v; };
   A.acts.conf = (d) => { rapidAns().conf = d.v; };
-  A.acts.rprev = () => { A.S.rapid.idx = Math.max(0, A.S.rapid.idx - 1); };
-  const advance = () => { const R = A.S.rapid; if (R.idx < D.RAPID.length - 1) { R.idx++; A._top = true; return; } K.rapidFinish(A.S); A.go('state'); };
+  A.acts.rprev = () => { A.S.rapid.idx = Math.max(0, A.S.rapid.idx - 1); A.U.amb = {}; };
+  const advance = () => { const R = A.S.rapid; A.U.amb = {}; if (R.idx < D.RAPID.length - 1) { R.idx++; A._top = true; return; } K.rapidFinish(A.S); A.go('state'); };
   A.acts.rnext = () => { const a = rapidAns(), q = D.RAPID[A.S.rapid.idx]; if (!a.final) return A.toast('请先选择一个选项，或点击「跳过本题」'); if (q.askConf && !a.conf) return A.toast('请选择把握程度'); advance(); };
   A.acts.rskip = () => { const a = rapidAns(); a.final = null; a.conf = null; advance(); };
 
@@ -17,7 +17,7 @@
     return { html: `${A.head('rapid', '基础练习', `共 ${n} 题，约 5 分钟。按当前的理解作答，不会的题可以跳过。`)}
       <section class="card q">${A.qhead(i + 1, n, q.type)}<p class="stem">${esc(q.stem)}</p>${q.code ? A.code(q.code) : ''}
       ${A.mcq('rapid', q.options, { value: a.final || null })}
-      ${q.askConf ? `<div class="conf"><span>把握程度</span><span class="seg" role="radiogroup" aria-label="把握程度">${Object.keys(A.CONF).map((c) => `<button class="${a.conf === c ? 'on' : ''}" data-act="conf" data-v="${c}">${A.CONF[c]}</button>`).join('')}</span></div>` : ''}
+      ${q.askConf ? `<div class="conf"><span>把握程度</span><span class="seg" role="radiogroup" aria-label="把握程度">${Object.keys(A.CONF).map((c) => `<button class="${a.conf === c ? 'on' : ''}" data-act="conf" data-v="${c}">${A.CONF[c]}</button>`).join('')}</span></div>${A.amb('rapid', ['conf'])}` : ''}
       <div class="actions">${i > 0 ? '<button class="btn ghost" data-act="rprev">上一题</button>' : ''}<span class="sp"></span><button class="btn plain" data-act="rskip">跳过本题</button><button class="btn" data-act="rnext">${i === n - 1 ? '提交' : '下一题'}${A.icon('arrow', 16)}</button></div></section>` }; };
 
   /* ---------- 04 练习结果 ---------- */
@@ -28,10 +28,13 @@
 
   const review = (S) => { const evs = S.evidence.filter((e) => e.stage === 'rapid');
     return `<table class="tbl"><thead><tr><th>题号</th><th>题型</th><th>你的作答</th><th>把握程度</th><th>结果</th><th></th></tr></thead><tbody>${evs.map((e, i) => `<tr><td class="mono">${i + 1}</td><td>${e.kind}</td><td>${e.final ? `选择 ${e.final}` : '<span class="faint">跳过</span>'}</td><td>${e.conf ? A.CONF[e.conf] : '<span class="faint">—</span>'}</td><td>${A.mark(e.ok)} ${A.okWord(e.ok)}</td><td>${A.evchips([e.id])}</td></tr>`).join('')}</tbody></table>`; };
-  const reflect = (S) => { const rf = S.reflect; if (!rf) return ''; const r = D.REFLECT[rf.q]; const no = D.RAPID.findIndex((q) => q.id === rf.q) + 1;
-    return `<div class="reflect"><h3>${A.icon('flag', 16)}回顾第 ${no} 题</h3><p>${r.stem}</p>${rf.answer === null
+  /* 反思式介入：很确定却答错时，先请学生自己回顾原因；答对但没把握时，提醒留意自我评价 */
+  const reflect = (S, low) => { const rf = S.reflect;
+    if (!rf) return low.length ? A.refl(`第 ${low.join('、')} 题：答对了，但你选的是「不太确定」`, '<p>结果是对的，把握程度却偏低。做进阶练习时可以留意：自己的判断是不是比想象中更可靠。</p>') : '';
+    const r = D.REFLECT[rf.q]; const no = D.RAPID.findIndex((q) => q.id === rf.q) + 1;
+    return A.refl(`回顾第 ${no} 题：你选了「非常确定」，但这道题答错了`, `<p>${r.stem}</p>${rf.answer === null
       ? `<div class="opts">${r.options.map((o, i) => `<button class="opt" data-act="reflect" data-i="${i}"><span class="k">${i + 1}</span><span>${o}</span></button>`).join('')}</div><button class="btn plain sm" style="margin-top:8px" data-act="reflect" data-i="-1">暂不回答</button>`
-      : `<p class="muted small" style="margin-top:6px">${rf.answer === -1 ? '已选择暂不回答。' : `已记录你的回答：${r.options[rf.answer]}。后续练习会重点考察这一点。`}</p>`}</div>`; };
+      : `<p class="muted small" style="margin-top:6px">${rf.answer === -1 ? '已选择暂不回答。' : `已记录你的回答：${r.options[rf.answer]}。后续练习会重点考察这一点。`}</p>`}`); };
   A.acts.reflect = (d) => K.reflectAnswer(A.S, +d.i);
 
   const basis = (S, dg) => { const p = S.deep.plan; const evs = S.evidence.filter((e) => e.stage === 'rapid');
@@ -50,13 +53,12 @@
     const low = evs.map((e, i) => (e.ok === 1 && e.conf === 'low' ? i + 1 : 0)).filter(Boolean);
     return { html: `${A.head('state', '练习结果')}
       <section class="card result">${A.ring(right, evs.length, '答对')}<div><div class="r-top">${A.labelTag(dg, '初步评估：')}</div><p class="r-detail">${dg.label.detail}</p>
-        <p class="faint small">初步评估依据 ${evs.length} 道基础练习题得出，将在进阶练习中进一步确认。</p></div></section>
-      <section class="card"><h2 class="sec-h"><span class="no">1</span>逐题回顾</h2>${review(S)}${reflect(S)}
-        ${low.length ? `<p class="info">第 ${low.join('、')} 题作答正确，但把握程度为「不太确定」。</p>` : ''}
-        <p class="faint small" style="margin-top:12px">题目解析将在进阶练习完成后提供。</p></section>
-      <section class="card"><h2 class="sec-h"><span class="no">2</span>能力评估<small>基于目前的作答记录</small></h2><div class="assess">${A.radar(dg)}${A.dimList(dg)}</div>${A.legend3()}</section>
-      <section class="card"><h2 class="sec-h"><span class="no">3</span>下一步：进阶练习</h2><p>${p.reason}</p>
-        <ol class="plan">${p.tasks.map((t, i) => { const T = D.DEEP[t]; return `<li><span class="pn">${i + 1}</span><div><b>${T.name}</b><span class="tag blue">${T.type}</span><p>${T.why}</p></div></li>`; }).join('')}</ol>
-        <div class="actions"><button class="btn lg" data-act="start" data-to="deep">开始进阶练习${A.icon('arrow', 17)}</button><span class="faint small">共 3 题，约 10 分钟</span></div></section>
+        <p class="faint small">只依据 ${evs.length} 道基础练习题，接下来的进阶练习会确认或修正这个评估。</p></div></section>
+      ${reflect(S, low)}
+      <section class="card cta"><div><span class="eyebrow">下一步</span><h2>进阶练习</h2><p>${p.reason}</p>
+        <p class="faint small">共 3 题，约 10 分钟：${p.tasks.map((t) => D.DEEP[t].name).join(' · ')}</p></div>
+        <button class="btn lg" data-act="start" data-to="deep">开始进阶练习${A.icon('arrow', 17)}</button></section>
+      <section class="card"><h2 class="sec-h">五项能力<small>初步评估</small></h2>${A.dimList(dg, { compact: true })}${A.legend3()}</section>
+      <details class="fold"><summary>逐题回顾（答对 ${right} / ${evs.length}）</summary><div class="fold-b">${review(S)}<p class="faint small" style="margin-top:12px">题目解析将在进阶练习完成后提供。</p></div></details>
       ${basis(S, dg)}` }; };
 })();

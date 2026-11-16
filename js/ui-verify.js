@@ -37,12 +37,12 @@
       <section class="card vres ${st}"><div><span class="eyebrow">检测结果</span><h2>${title}</h2><p>${desc}</p>
         <div class="actions"><button class="btn lg" data-act="start" data-to="path">查看学习路径${A.icon('arrow', 17)}</button>${st !== 'pass' ? '<button class="btn ghost" data-act="vredo">重新检测</button>' : ''}</div></div>
         ${st === 'pass' ? `<span class="stamp${A.U.stamp ? ' drop' : ''}">检测<br>通过</span>` : ''}</section>
-      ${p ? `<section class="card"><h2 class="sec-h"><span class="no">1</span>逐题结果</h2><table class="tbl"><thead><tr><th>题号</th><th>题目</th><th>题型</th><th>结果</th><th>说明</th><th></th></tr></thead><tbody>${rows.map((r, i) => `<tr><td class="mono">${i + 1}</td><td>${r[0]}</td><td>${r[1]}</td><td>${A.mark(r[2])} ${A.okWord(r[2])}</td><td class="muted small">${esc(r[3].note)}</td><td>${A.evchips([r[3].id])}</td></tr>`).join('')}</tbody></table>
-        ${p.judge && !p.judge.allAC ? `<details class="fold"><summary>第 1 题判题详情</summary><div class="fold-b">${A.judgeTable(p.judge, { trace: true })}</div></details>` : ''}
-        ${p.pjudge && !p.pjudge.allAC ? `<details class="fold"><summary>第 4 题判题详情</summary><div class="fold-b">${A.judgeTable(p.pjudge, { trace: true })}</div></details>` : ''}</section>` : ''}
-      <section class="card"><h2 class="sec-h"><span class="no">${p ? 2 : 1}</span>能力评估更新</h2>
+      <section class="card"><h2 class="sec-h">能力评估更新<small>检测前 → 检测后</small></h2>
         <table class="tbl cmp"><thead><tr><th>能力维度</th><th>检测前</th><th>检测后</th><th>变化</th></tr></thead><tbody>${D.DIMS.map((d) => `<tr><td><b>${d.name}</b></td><td>${cell(before.dims[d.id])}</td><td>${cell(after.dims[d.id])}</td><td>${change(before.dims[d.id], after.dims[d.id], tested.has(d.id))}</td></tr>`).join('')}</tbody></table>
-        <p class="faint small" style="margin-top:12px">「已验证」表示该项能力在无提示的条件下独立完成。迁移能力不在本次检测范围内，由四星任务检测。</p>${A.legend3()}</section>`; };
+        <p class="faint small" style="margin-top:12px">「已验证」表示该项能力在无提示的条件下独立完成。迁移能力不在本次检测范围内，由四星任务检测。</p></section>
+      ${p ? `<details class="fold"><summary>逐题结果（${rows.filter((r) => r[2] === 1).length} / 4 通过）</summary><div class="fold-b"><table class="tbl"><thead><tr><th>题号</th><th>题目</th><th>题型</th><th>结果</th><th>说明</th><th></th></tr></thead><tbody>${rows.map((r, i) => `<tr><td class="mono">${i + 1}</td><td>${r[0]}</td><td>${r[1]}</td><td>${A.mark(r[2])} ${A.okWord(r[2])}</td><td class="muted small">${esc(r[3].note)}</td><td>${A.evchips([r[3].id])}</td></tr>`).join('')}</tbody></table>
+        ${p.judge && !p.judge.allAC ? `<h4 style="margin-top:16px">第 1 题判题详情</h4>${A.judgeTable(p.judge, { trace: true })}` : ''}
+        ${p.pjudge && !p.pjudge.allAC ? `<h4 style="margin-top:16px">第 4 题判题详情</h4>${A.judgeTable(p.pjudge, { trace: true })}` : ''}</div></details>` : ''}`; };
 
   A.views.verify = () => { const S = A.S;
     if (!S.deep.done) return { html: `${A.head('verify', '独立检测')}<section class="card"><p class="empty">完成进阶练习后开放。</p></section>` };

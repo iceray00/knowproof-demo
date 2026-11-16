@@ -11,7 +11,7 @@
       <p>二分查找做的事情，就是找到这条分界线。按照要找的是「第一个满足条件的位置」还是「最后一个满足条件的位置」，有两种写法：</p>
       <div class="two"><div><h4>写法一：第一个满足条件的位置</h4>${A.code('int mid = l + r >> 1;\nif (check(mid)) r = mid;\nelse l = mid + 1;')}</div><div><h4>写法二：最后一个满足条件的位置</h4>${A.code('int mid = l + r + 1 >> 1;\nif (check(mid)) l = mid;\nelse r = mid - 1;')}</div></div>
       ${callout('!', '<b>写法二的 mid 必须多加 1。</b>区间只剩两个数时，<code>l + r &gt;&gt; 1</code> 的结果等于 l，执行 <code>l = mid</code> 后区间没有变化，程序会陷入死循环。可以回到第 3 节，选择「最后一个 ≤ x」并勾选「去掉 mid 的 +1」验证。', true)}
-      <div>${ask('plus1')} ${ask('tpl')}</div>`),
+      ${ask('plus1', 'tpl')}`),
     () => sec(6, '常见错误', `<div class="pits">
       <div class="pit"><span class="n">1</span><div><h4>死循环</h4><p>使用了 <code>l = mid</code>，但 mid 没有加 1。区间只剩两个数时不再缩小。</p></div></div>
       <div class="pit"><span class="n">2</span><div><h4>没有处理「找不到」</h4><p>循环只保证 l 停在某一个位置，不保证这个位置上的数就是 x。循环结束后需要再判断一次 <code>q[l] == x</code>。</p></div></div>
@@ -27,14 +27,14 @@
       <p>循环结束，l = 1。检查 q[1] = 3，等于 x，起始位置为 <b>1</b>。如果这里 q[l] ≠ x，说明数组中没有 x，直接输出 -1 -1。</p>
       <p><b>第二步：终止位置</b>，即最后一个 ≤ 3 的位置，使用写法二（mid 加 1）。</p>${rounds([[1, 0, 5, 3, 3, '3 ≤ 3 成立 → l = 3'], [2, 3, 5, 4, 5, '5 ≤ 3 不成立 → r = 3']])}
       <p>循环结束，l = 3，终止位置为 <b>3</b>。答案：<code>1 3</code>。</p>
-      <h3 style="margin-top:20px">小结</h3><ul class="sumlist" style="margin-top:8px">${['使用二分的前提是存在一条分界线，数据有序是最常见的情形', '每一轮比较中间位置并排除一半，时间复杂度为 O(log n)', 'r = mid 配 l + r >> 1；l = mid 配 l + r + 1 >> 1', '循环结束后，需要判断停下的位置是否真的是答案'].map((t) => `<li>${A.icon('ok', 15, 2.6)}<span>${t}</span></li>`).join('')}</ul>
-      <div class="actions"><button class="btn lg" data-act="start" data-to="rapid">开始练习${A.icon('arrow', 17)}</button><span class="faint small">基础练习共 4 题，约 5 分钟</span></div>`),
+      <h3 style="margin-top:20px">小结</h3><ul class="sumlist" style="margin-top:8px">${['使用二分的前提是存在一条分界线，数据有序是最常见的情形', '每一轮比较中间位置并排除一半，时间复杂度为 O(log n)', 'r = mid 配 l + r >> 1；l = mid 配 l + r + 1 >> 1', '循环结束后，需要判断停下的位置是否真的是答案'].map((t) => `<li>${A.icon('ok', 15, 2.6)}<span>${t}</span></li>`).join('')}</ul>`),
   );
 
-  A.views.material = () => { const i = D.NODE_INFO.bsearch;
-    return { html: `<section class="card"><div class="lesson-top"><div><span class="eyebrow">基础算法 · 第 3 节</span><h1 style="margin-top:6px">二分查找</h1><p class="muted" style="margin-top:8px">${i.intro}</p>
-        <div class="meta"><span class="tag blue">难度　${i.level}</span><span class="tag">${A.icon('clock', 13)}约 ${i.mins} 分钟</span><span class="tag">前置　${i.pre.join('、')}</span></div>
-        <div class="outcomes"><h3>学完本节，你将能够</h3><ul>${i.outcomes.map((o) => `<li>${A.icon('ok', 15, 2.6)}<span>${o}</span></li>`).join('')}</ul></div></div>
-        <nav class="toc" aria-label="本节目录"><h3>本节目录</h3>${TOC.map((t, k) => `<a href="#s${k + 1}"><i>${String(k + 1).padStart(2, '0')}</i>${t}</a>`).join('')}
-        <button class="btn sm ghost" style="margin-top:14px" data-act="start" data-to="rapid">已学过，直接练习</button></nav></div></section>${parts.map((p) => p()).join('')}` }; };
+  A.acts.sec = (d) => { A.U.sec = +d.i; A.U.amb = {}; A._top = true; };
+  A.views.material = () => { const n = parts.length, k = Math.min(A.U.sec, n - 1); const no = (i) => String(i + 1).padStart(2, '0');
+    return { html: `<div class="page-h lesson-h"><div><span class="eyebrow">基础算法 · 学习</span><h1>二分查找</h1></div><button class="btn ghost sm" data-act="start" data-to="rapid">已学过，直接练习</button></div>
+      <nav class="secnav" aria-label="本节目录">${TOC.map((t, i) => `<button class="${i === k ? 'cur' : i < k ? 'done' : ''}" data-act="sec" data-i="${i}" title="${t}"${i === k ? ' aria-current="step"' : ''}><i>${no(i)}</i><span>${t}</span></button>`).join('')}</nav>
+      ${parts[k]()}
+      <div class="actions secfoot">${k > 0 ? `<button class="btn ghost" data-act="sec" data-i="${k - 1}">${A.icon('back', 16)}上一节</button>` : ''}<span class="sp"></span><span class="faint small">第 ${k + 1} / ${n} 节</span>
+        ${k < n - 1 ? `<button class="btn" data-act="sec" data-i="${k + 1}">下一节：${TOC[k + 1]}${A.icon('arrow', 16)}</button>` : `<button class="btn lg" data-act="start" data-to="rapid">开始练习（4 题）${A.icon('arrow', 17)}</button>`}</div>` }; };
 })();

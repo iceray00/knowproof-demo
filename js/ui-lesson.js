@@ -1,10 +1,14 @@
-/* 知证 KnowProof · 02 学习（上）：讲解 1 ~ 4 节、猜数字、分步演示 */
+/* 知证 KnowProof · 02 学习（上）：讲解 1 ~ 4 节、猜数字、分步演示。每次只显示一节 */
 (function () {
   const A = window.A, D = A.D, K = A.K;
-  const ask = (id) => { const q = A.L.QA.find((x) => x.id === id); return `<button class="asklink" data-act="ask" data-q="${id}">${A.icon('chat', 14)}问小证：${q.q}</button>`; };
-  const sec = (n, title, body) => `<section class="card lesson" id="s${n}"><h2 class="sec-h"><span class="no">${String(n).padStart(2, '0')}</span>${title}</h2>${body}</section>`;
+  /* 环境式辅助：与本节内容有关的快捷提问，回答就地展开 */
+  const ask = (...ids) => A.amb('lesson', ids);
+  const sec = (n, title, body) => `<section class="card lesson"><h2 class="sec-h"><span class="no">${String(n).padStart(2, '0')}</span>${title}</h2>${body}</section>`;
   const callout = (ic, html, warn) => `<div class="callout${warn ? ' warnc' : ''}"><span class="ic">${ic}</span><p>${html}</p></div>`;
   A.lesson = { ask, sec, callout, parts: [] };
+  /* 主动介入弹窗的两个通用回应：暂时不需要 / 换一种方式（改为就地讲解） */
+  A.acts.prox = (d) => { A.U.pro[d.k] = 'done'; K.note(A.S, 'student', '学生决定：暂时不需要，继续独立思考'); };
+  A.acts.proalt = (d) => { A.U.pro[d.k] = 'done'; K.note(A.S, 'student', '学生决定：换一种支持方式'); A.acts.amb(d); };
 
   /* ---------- 互动演示一：猜数字 ---------- */
   const newGuess = () => ({ secret: 1 + Math.floor(Math.random() * 100), lo: 1, hi: 100, log: [], done: false, err: null });
@@ -12,10 +16,15 @@
     return `<div class="guess"><div class="g-bar" role="img" aria-label="剩余范围 ${g.lo} 到 ${g.hi}"><div class="live" style="left:${g.lo - 1}%;width:${n}%"></div><div class="lab" style="left:${Math.min(g.lo - 1, 70)}%">${g.done ? `答案是 ${g.secret}` : `剩余范围 ${g.lo} ~ ${g.hi}，共 ${n} 个数`}</div></div>
       <div class="g-ctl">${g.done ? `<b>第 ${g.log.length} 次猜中。</b>` : `<input class="in" style="width:96px" inputmode="numeric" placeholder="${g.lo} ~ ${g.hi}" data-in="guess" data-enter="guess" value="${A.esc(A.U.ins.guess || '')}" aria-label="输入你猜的数"><button class="btn sm" data-act="guess" data-v="go">猜</button><button class="btn sm ghost" data-act="guess" data-v="mid">猜中间值 ${(g.lo + g.hi) >> 1}</button>`}
         <button class="btn sm plain" data-act="guess" data-v="reset">重新开始</button>${g.err ? `<span class="small" style="color:var(--bad)">${g.err}</span>` : ''}</div>
+      ${A.U.pro.guess === 'show' ? A.pro({ why: '你连续两次没有猜中间的数', text: `照这样猜，剩下的 ${n} 个数最坏还要猜很多次。要不要试一次「猜剩余范围的中间值」，看看范围会缩小多少？`,
+        acts: [['试一次', 'guess', ' data-v="mid" data-pro="1"', ''], ['暂时不需要，我自己猜', 'prox', ' data-k="guess"'], ['换一种方式：讲给我听', 'proalt', ' data-k="guess" data-slot="lesson" data-q="guess"']] }) : ''}
       ${g.log.length ? `<div class="g-log">${g.log.map((x, i) => `<span class="${x[1] === '猜对了' ? 'hit' : ''}">第 ${i + 1} 次　${x[0]}　${x[1]}</span>`).join('')}</div>` : ''}</div>`; };
-  A.acts.guess = (d) => { let g = A.U.guess; if (d.v === 'reset' || !g) { A.U.guess = newGuess(); A.U.ins.guess = ''; return; } if (g.done) return;
-    const v = d.v === 'mid' ? (g.lo + g.hi) >> 1 : parseInt(A.U.ins.guess, 10); A.U.ins.guess = '';
+  A.acts.guess = (d) => { let g = A.U.guess; if (d.v === 'reset' || !g) { A.U.guess = newGuess(); A.U.ins.guess = ''; delete A.U.pro.guess; return; } if (g.done) return;
+    const mid = (g.lo + g.hi) >> 1; const v = d.v === 'mid' ? mid : parseInt(A.U.ins.guess, 10); A.U.ins.guess = '';
     if (!(v >= g.lo && v <= g.hi)) { g.err = `请输入 ${g.lo} ~ ${g.hi} 之间的整数`; return; } g.err = null;
+    if (d.pro) { A.U.pro.guess = 'done'; K.note(A.S, 'student', '学生决定：接受小证的建议，试一次猜中间值'); }
+    g.off = Math.abs(v - mid) > Math.max(1, (g.hi - g.lo + 1) * 0.15) ? (g.off || 0) + 1 : 0;
+    if (g.off >= 2 && !A.U.pro.guess && v !== g.secret) { A.U.pro.guess = 'show'; K.note(A.S, 'proactive', '主动介入：连续两次没有猜中间值，询问是否试一次猜中间值'); }
     if (v === g.secret) { g.log.push([v, '猜对了']); g.lo = g.hi = v; g.done = true; } else if (v > g.secret) { g.log.push([v, '大了']); g.hi = v - 1; } else { g.log.push([v, '小了']); g.lo = v + 1; } };
 
   /* ---------- 互动演示二：分步执行 ---------- */
@@ -39,7 +48,7 @@
 
   A.lesson.parts.push(
     () => sec(1, '从猜数字说起', `<p>我在 1 ~ 100 之间选定一个整数，你每猜一次，我会回答「大了」「小了」或「猜对了」。怎样猜，才能用最少的次数保证猜中？</p>
-      <p>从 1 开始逐个猜，最坏情况要猜 100 次。更好的办法是<span class="hl">每次都猜剩余范围的中间值</span>：无论回答是「大了」还是「小了」，都能一次排除一半的数。</p>${guess()}
+      <p>从 1 开始逐个猜，最坏情况要猜 100 次。更好的办法是<span class="hl">每次都猜剩余范围的中间值</span>：无论回答是「大了」还是「小了」，都能一次排除一半的数。</p>${guess()}${ask('guess')}
       ${callout('7', '每次猜中间值，剩余范围按 100 → 50 → 25 → 12 → 6 → 3 → 1 缩小，<b>最多 7 次一定能猜中</b>。这就是二分查找的全部思想。')}`),
     () => sec(2, '什么是二分查找', `<p><b>二分查找</b>（binary search）是在<span class="hl">有序</span>数据中查找目标的方法：每次取中间位置的元素与目标比较，根据比较结果排除不可能包含目标的那一半，再在剩下的一半中重复这一过程。</p>
       <p>它成立的前提是数据有序。在乱序的数据里，比较中间元素之后，无法判断目标在左侧还是右侧，也就不能排除任何一半。</p>

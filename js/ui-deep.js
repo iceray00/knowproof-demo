@@ -47,8 +47,8 @@
     else { const st = T.kind === 'code' ? A.U.code[k] : A.U.src[k]; const cur0 = T.kind === 'code' ? JSON.stringify(st.ch) : st.code; const lastRun = st.runs[st.runs.length - 1];
       if (!st.runs.length || (T.kind === 'code' ? JSON.stringify(lastRun) : lastRun) !== cur0) { if (!judgeNow(T)) return A.toast(T.kind === 'code' ? '请先填完所有空' : '请先编写代码'); }
       p = { runs: st.runs.slice() }; }
-    K.deepSubmit(S, T.id, p); A.U.deepRes = T.id; A._top = true; };
-  A.acts.dskip = () => { const T = cur(); K.deepSubmit(A.S, T.id, { skip: true }); A.U.deepRes = T.id; A._top = true; };
+    K.deepSubmit(S, T.id, p); A.U.deepRes = T.id; A.U.amb = {}; A._top = true; };
+  A.acts.dskip = () => { const T = cur(); K.deepSubmit(A.S, T.id, { skip: true }); A.U.deepRes = T.id; A.U.amb = {}; A._top = true; };
   A.acts.dnext = () => { A.U.deepRes = null; A._top = true; };
 
   /* ---------- 题目 ---------- */
@@ -68,19 +68,18 @@
     else if (T.kind === 'counter') extra = `<ul class="checks"><li>${A.mark(an.found >= 0 ? 1 : 0)}<span>${an.found >= 0 ? `第 ${an.found + 1} 次尝试构造出了反例` : '没有构造出反例'}</span></li><li>${A.mark(an.why ? 1 : 0)}<span>${an.why ? '原因判断正确' : `原因判断错误，正确答案是 ${T.whyAnswer}`}</span></li></ul>`;
     else { const st = T.kind === 'code' ? A.U.code[key(T)] : A.U.src[key(T)]; extra = st && st.last ? A.judgeTable(st.last, { brief: an.passAt >= 0, trace: true }) : ''; }
     return `<section class="card"><div class="res-h">${A.mark(r.ok)}<h2>${r.ok === null ? '已跳过' : r.ok === 1 ? '本题完成' : r.ok === 0.5 ? '本题部分完成' : '本题未完成'}</h2><span class="sp"></span>${A.evchips([r.ev])}</div>
-      <p class="muted">${esc(ev.note)}</p>${extra}${EXPLAIN[T.id] && r.ok !== 1 ? `<div class="explain"><b>解析</b><p>${EXPLAIN[T.id]}</p></div>` : ''}
+      <p class="muted">${esc(ev.note)}</p>${extra}${EXPLAIN[T.id] && r.ok !== 1 ? `<div class="explain"><div class="ex-h">${A.mode('ref')}<b>解析</b></div><p>${EXPLAIN[T.id]}</p></div>` : ''}
       <div class="actions"><button class="btn" data-act="dnext">${S.deep.done ? '查看评估结果' : '下一题'}${A.icon('arrow', 16)}</button></div></section>`; };
 
   /* ---------- 完成页 ---------- */
-  const done = (S) => { const dg = S.snaps.deep, base = S.snaps.rapid, p = S.deep.plan; const changed = dg.label.key !== base.label.key;
+  const done = (S) => { const dg = S.snaps.deep, base = S.snaps.rapid, p = S.deep.plan; const changed = dg.label.key !== base.label.key; const focus = dg.label.focus.map((f) => K.DIM_NAME[f]).join('、');
     return `${A.head('deep', '进阶练习')}
       <section class="card result confirm"><div class="cf"><span class="cf-k">初步评估</span>${A.labelTag(base)}</div><span class="cf-arrow">${A.icon('arrow', 22)}</span><div class="cf"><span class="cf-k">确认后</span>${A.labelTag(dg)}</div>
-        <p class="r-detail">${changed ? '进阶练习的结果与初步评估不一致，评估已更新。' : '进阶练习的结果与初步评估一致，评估已确认。'}${dg.label.detail}</p></section>
-      <section class="card"><h2 class="sec-h"><span class="no">1</span>逐题结果</h2><table class="tbl"><thead><tr><th>题号</th><th>题目</th><th>题型</th><th>结果</th><th>说明</th><th></th></tr></thead><tbody>${p.tasks.map((t, i) => { const T = D.DEEP[t], r = S.deep.results[t], ev = S.evidence.find((e) => e.id === r.ev);
-        return `<tr><td class="mono">${i + 1}</td><td>${T.name}</td><td>${T.type}</td><td>${A.mark(r.ok)} ${A.okWord(r.ok)}</td><td class="muted small">${esc(ev.note)}</td><td>${A.evchips([r.ev])}</td></tr>`; }).join('')}</tbody></table></section>
-      <section class="card"><h2 class="sec-h"><span class="no">2</span>能力评估<small>虚线为基础练习后的评估</small></h2><div class="assess">${A.radar(dg, base)}${A.dimList(dg, { base })}</div>${A.legend3()}</section>
-      <section class="card"><h2 class="sec-h"><span class="no">3</span>下一步：针对辅导</h2><p>${dg.label.focus.length ? `根据评估结果，接下来针对「${dg.label.focus.map((f) => K.DIM_NAME[f]).join('、')}」安排辅导。` : '目前没有发现需要辅导的薄弱点，可以直接进入独立检测。'}</p>
-        <div class="actions"><button class="btn lg" data-act="start" data-to="support">继续${A.icon('arrow', 17)}</button></div></section>
+        <p class="r-detail">${changed ? '进阶练习的结果与初步评估不一致，评估已更新。' : '进阶练习的结果与初步评估一致，评估已确认。'}${dg.label.detail}</p>
+        <div class="actions"><button class="btn lg" data-act="start" data-to="support">${focus ? '查看辅导建议' : '继续'}${A.icon('arrow', 17)}</button><span class="faint small">${focus ? `接下来针对「${focus}」安排辅导，可以接受，也可以跳过。` : '目前没有发现需要辅导的薄弱点，可以直接进入独立检测。'}</span></div></section>
+      <section class="card"><h2 class="sec-h">五项能力<small>已根据进阶练习确认或修正</small></h2>${A.dimList(dg, { base, compact: true })}${A.legend3()}</section>
+      <details class="fold"><summary>逐题结果（3 题）</summary><div class="fold-b"><table class="tbl"><thead><tr><th>题号</th><th>题目</th><th>题型</th><th>结果</th><th>说明</th><th></th></tr></thead><tbody>${p.tasks.map((t, i) => { const T = D.DEEP[t], r = S.deep.results[t], ev = S.evidence.find((e) => e.id === r.ev);
+        return `<tr><td class="mono">${i + 1}</td><td>${T.name}</td><td>${T.type}</td><td>${A.mark(r.ok)} ${A.okWord(r.ok)}</td><td class="muted small">${esc(ev.note)}</td><td>${A.evchips([r.ev])}</td></tr>`; }).join('')}</tbody></table></div></details>
       <details class="fold"><summary>查看题目解析</summary><div class="fold-b"><h4>基础练习</h4><ol class="explains">${D.RAPID.map((q) => `<li><b>答案 ${q.answer}。</b>${RAPID_EXPLAIN[q.id]}</li>`).join('')}</ol>
         <h4 style="margin-top:14px">进阶练习</h4><ol class="explains">${p.tasks.map((t) => `<li><b>${D.DEEP[t].name}。</b>${EXPLAIN[t] || '文字作答按要点评阅，要点见单题结果。'}</li>`).join('')}</ol></div></details>`; };
 
@@ -91,5 +90,6 @@
     const T = cur();
     return { html: `${A.head('deep', '进阶练习', '共 3 题，约 10 分钟。独立完成，过程中不提供提示。')}
       <section class="card q">${A.qhead(dp.idx + 1, 3, T.type, T.dims)}<h2 class="qname">${T.name}</h2>${body(T)}
+      ${A.amb('deep', ['text', 'mcq', 'counter'].includes(T.kind) ? ['deepwhy', 'skip'] : ['runs', 'deepwhy'])}
       <div class="actions"><span class="sp"></span><button class="btn plain" data-act="dskip">跳过本题</button><button class="btn" data-act="dsub">提交${A.icon('arrow', 16)}</button></div></section>` }; };
 })();
