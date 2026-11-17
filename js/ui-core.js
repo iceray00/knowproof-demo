@@ -26,7 +26,8 @@
   A.icon = (n, w, sw) => svg(PATHS[n], w, sw);
 
   /* 品牌标识：一枚缺角的印章，里面是 K 与对勾（知 Know + 证 Proof）；折角表示「凭证」 */
-  A.logo = (w) => `<svg class="logo" width="${w || 32}" height="${w || 32}" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 2h18a5 5 0 0 1 5 5v13L20 30H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" fill="#d43c2c"/><path d="M20 30v-6a4 4 0 0 1 4-4h6z" fill="#a52b1e"/><path d="M10 8.5v15M14.6 16.2l3.5 4.6L24 9.6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  /* 标识：一枚朱红印章，白文「证」。言字旁写成一个对勾；右边的「正」五画，对应五项能力 */
+  A.logo = (w) => `<svg class="logo" width="${w || 36}" height="${w || 36}" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="kp-seal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4553f"/><stop offset="1" stop-color="#c8321f"/></linearGradient></defs><path d="M17 4h30a13 13 0 0 1 13 13v30a13 13 0 0 1-13 13H17A13 13 0 0 1 4 47V17A13 13 0 0 1 17 4z" fill="url(#kp-seal)"/><rect x="7.6" y="7.6" width="48.8" height="48.8" rx="10" fill="none" stroke="#fffaf3" stroke-opacity=".42" stroke-width="1.3"/><g transform="translate(32 32.5) scale(.87) translate(-31.4 -31)" fill="none" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5l4.2 3.4M28 16h23.5M39.8 16v31M39.8 31h10.2M31 31v16M25.5 47h28.5" stroke="#fffaf3"/><path d="M8 32.5l6.2 13 8-18.5" stroke="#f5cc6e"/></g></svg>`;
   /* AI 助教「小证」的头像：一枚圆形的小印；四种出现方式各带一个标签 */
   A.xz = (cls) => `<span class="xz${cls ? ' ' + cls : ''}" aria-hidden="true">证</span>`;
   A.MODES = { pro: ['主动介入', 'Proactive', '系统发现你卡住时，主动弹出来问一句'], amb: ['环境式辅助', 'Ambient', '题目、代码旁边的快捷提问，就地回答'],
