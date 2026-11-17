@@ -14,12 +14,12 @@
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; border: 2px solid #c8cedb; background: #fff; }
 .dot.sealed { background: var(--ok); border-color: var(--ok); } .dot.pending { background: var(--gold); border-color: var(--gold); }
-.dot.live { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 3px rgba(55, 87, 245, .2); } .dot.lock { background: var(--line); border-color: var(--line); }
+.dot.live { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 3px rgba(79, 111, 214, .2); } .dot.lock { background: var(--line); border-color: var(--line); }
 .chapters { display: grid; gap: 10px; }
 .chap { padding: 20px 22px 18px; }
 .chap-h { display: flex; align-items: center; gap: 14px; }
 .chap-no { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font: 700 15px/1 var(--mono); color: var(--brand-ink); background: var(--brand-soft); }
-.chap .chap-no { color: #fff; background: var(--ink); }
+.chap .chap-no { color: #fff; background: var(--fill); }
 .chaprow > summary { gap: 14px; padding: 10px 16px 10px 14px; } .chaprow .chap-no { width: 34px; height: 34px; border-radius: 9px; font-size: 13px; background: var(--line2); color: var(--ink2); }
 .chaprow b { font-size: 15px; white-space: nowrap; } .cr-d { flex: 1; min-width: 0; font-size: 13px; font-weight: 400; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cr-p { font: 600 13px var(--mono); color: var(--ink2); white-space: nowrap; }
 details.chaprow > summary::after { margin-left: 4px; } details.chaprow > .fold-b { padding: 4px 16px 16px 62px; }
@@ -34,7 +34,7 @@ details.chaprow > summary::after { margin-left: 4px; } details.chaprow > .fold-b
 .node .ix { font: 600 11px/1 var(--mono); color: var(--ink3); }
 .node.sealed { background: #f4fbf8; border-color: #cdeadd; } .node.pending { background: #fffaf0; border-color: #f5e2b5; }
 .node.lock { color: var(--ink3); background: #fafbfc; }
-.node.live { border-color: var(--brand); background: var(--brand-soft); font-weight: 650; color: var(--brand-ink); box-shadow: 0 0 0 3px rgba(55, 87, 245, .12); }
+.node.live { border-color: var(--brand); background: var(--brand-soft); font-weight: 650; color: var(--brand-ink); box-shadow: 0 0 0 3px rgba(79, 111, 214, .12); }
 .node .st { font-size: 11.5px; font-weight: 600; padding: 2px 6px; border-radius: 5px; background: var(--brand); color: #fff; }
 .node svg { color: var(--ink3); }
 
@@ -44,7 +44,7 @@ details.chaprow > summary::after { margin-left: 4px; } details.chaprow > .fold-b
 .secnav { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 5px; }
 .secnav button { display: block; padding: 8px 4px 2px 0; border-top: 3px solid var(--line); font-size: 12px; line-height: 1.5; color: var(--ink3); }
 .secnav button i { display: block; font: 600 11px/1.4 var(--mono); font-style: normal; } .secnav button span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.secnav button:hover { color: var(--ink); border-top-color: #cfccc3; } .secnav button.done { border-top-color: var(--ink); color: var(--ink2); } .secnav button.cur { border-top-color: var(--seal); color: var(--ink); font-weight: 650; } .secnav button.cur i { color: var(--seal); }
+.secnav button:hover { color: var(--ink); border-top-color: #cfccc3; } .secnav button.done { border-top-color: #b5b2a9; color: var(--ink2); } .secnav button.cur { border-top-color: var(--seal); color: var(--ink); font-weight: 650; } .secnav button.cur i { color: var(--seal); }
 .lesson { padding: 30px 34px 28px; } .lesson .sec-h { font-size: 22px; } .secfoot { margin-top: 2px; }
 .hl { background: linear-gradient(transparent 62%, rgba(240, 168, 0, .32) 62%); padding: 0 1px; }
 .callout { margin-top: 14px; display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 14px 16px; border-radius: 12px; background: var(--brand-soft); font-size: 14.5px; }
@@ -75,7 +75,7 @@ details.chaprow > summary::after { margin-left: 4px; } details.chaprow > .fold-b
 .g-bar .lab { position: absolute; top: 0; height: 34px; display: grid; place-items: center; font: 600 12.5px/1 var(--mono); color: var(--brand-ink); padding: 0 8px; }
 .g-ctl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
 .in { height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 0 12px; background: #fff; font-family: var(--mono); font-size: 14px; }
-.in:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(55, 87, 245, .15); }
+.in:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(79, 111, 214, .15); }
 .g-log { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
 .g-log span { font: 600 12.5px/1 var(--mono); padding: 6px 8px; border-radius: 7px; background: var(--line2); color: var(--ink2); } .g-log span.hit { background: var(--ok-soft); color: var(--ok); }
 
@@ -90,7 +90,7 @@ details.chaprow > summary::after { margin-left: 4px; } details.chaprow > .fold-b
 .cell .i { font: 500 11.5px/1 var(--mono); color: var(--ink3); margin-top: 6px; }
 .cell.out .v { background: var(--line2); color: #b6bdca; } .cell.mid .v { border-color: var(--seal); background: #fff; color: var(--seal); box-shadow: 0 6px 14px -8px rgba(212, 60, 44, .7); } .cell.mid .p { color: var(--seal); }
 .viz-say { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--line2); font-size: 14.5px; min-height: 48px; }
-.anno { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0; margin-top: 14px; border-radius: 14px; overflow: hidden; border: 1px solid #1c2440; }
-.anno pre.code { margin: 0; border-radius: 0; } .anno ol { background: #fbfcff; padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
+.anno { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0; margin-top: 14px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+.anno pre.code { margin: 0; border-radius: 0; border: 0; border-right: 1px solid var(--line); } .anno ol { background: #fff; padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
 .anno li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; font-size: 13.5px; color: var(--ink2); } .anno li b { font: 600 12px/1.9 var(--mono); color: var(--brand-ink); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; } .two h4 { font-size: 14px; margin-bottom: 8px; }

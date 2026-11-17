@@ -19,12 +19,14 @@
     const ae = document.activeElement; let fk = null;
     if (ae && ae.dataset) { const k = ['src', 'text', 'in'].find((x) => ae.dataset[x]); if (k) fk = { sel: `[data-${k}="${ae.dataset[k]}"]`, s: ae.selectionStart, e: ae.selectionEnd }; }
     const db = document.getElementById('drawer-b'); const keep = db && A._drawer === A.U.drawer ? db.scrollTop : 0;
-    app.innerHTML = `${top()}<div class="wrap${home ? ' home' : ''}">${home ? '' : rail()}<main class="main" id="main">${view.html}</main></div>${A.fab()}${drawer()}${A.U.toast ? `<div class="toast" role="status">${esc(A.U.toast)}</div>` : ''}`;
+    const gb = A.guide();
+    app.innerHTML = `${top()}${gb}<div class="wrap${home ? ' home' : ''}${gb ? ' g' : ''}">${home ? '' : rail()}<main class="main" id="main">${view.html}</main></div>${A.fab()}${drawer()}${A.U.toast ? `<div class="toast" role="status">${esc(A.U.toast)}</div>` : ''}`;
     app.querySelectorAll('.main details.fold').forEach((d, i) => { d.dataset.fold = S.stage + i; d.open = !!A.U.folds[S.stage + i]; });
     if (fk) { const el = app.querySelector(fk.sel); if (el) { el.focus({ preventScroll: true }); try { el.setSelectionRange(fk.s, fk.e); } catch (e) { /* 部分输入框不支持选区 */ } } }
     const nb = document.getElementById('drawer-b'); if (nb) { if (A.U.drawer === 'chat') nb.scrollTop = nb.scrollHeight; else if (A.U.drawer === 'ev' && A.U.focusEv && A._drawer !== 'ev') { const t = nb.querySelector('.evi.focus'); if (t) t.scrollIntoView({ block: 'center' }); } else nb.scrollTop = keep; }
     A._drawer = A.U.drawer; document.body.classList.toggle('lock', !!A.U.drawer);
-    if (A._top) { window.scrollTo(0, 0); A._top = false; } };
+    if (A._top) { window.scrollTo(0, 0); A._top = false; }
+    if (A._focus) { const t = app.querySelector(A._focus); if (t) t.scrollIntoView({ block: 'center' }); A._focus = null; } };
 
   /* ---------- 通用操作 ---------- */
   A.acts.home = () => A.go('home');

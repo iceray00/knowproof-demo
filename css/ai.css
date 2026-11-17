@@ -13,13 +13,12 @@
 .aim i { font-style: normal; font-size: 12px; font-weight: 650; height: 22px; padding: 0 8px; border-radius: 6px; display: inline-grid; place-items: center; border: 1px solid transparent; }
 .aim-pro i { background: var(--seal); color: #fff; }
 .aim-amb i { border: 1px dashed #c9a49d; color: #9a4a3f; background: #fff; }
-.aim-ond i { background: var(--ink); color: #fff; }
+.aim-ond i { background: var(--fill); color: #fff; }
 .aim-ref i { border-color: var(--seal); color: var(--seal); background: #fff; }
 
 /* ---------- 任务等级：五格 ---------- */
 .pips { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 8px; }
 .pips i { width: 8px; height: 8px; border-radius: 2px; background: #dedbd2; } .pips i.on { background: var(--seal); }
-.rec .pips i { background: rgba(255, 255, 255, .3); } .rec .pips i.on { background: #fff; }
 
 /* ---------- 环境式辅助 ---------- */
 .amb { margin-top: 16px; padding-top: 12px; border-top: 1px dashed #d9d5cb; }
@@ -33,7 +32,7 @@
 @keyframes rise2 { from { transform: translateY(6px); opacity: 0; } }
 
 /* ---------- 主动介入 ---------- */
-.pro { position: relative; margin-top: 16px; padding: 14px 16px 16px; border-radius: 12px; background: #fff; border: 1.5px solid var(--seal); box-shadow: 0 14px 30px -18px rgba(212, 60, 44, .55); animation: rise2 .25s both; }
+.pro { position: relative; margin-top: 16px; padding: 14px 16px 16px; border-radius: 12px; background: #fff; border: 1.5px solid var(--seal); box-shadow: 0 14px 30px -18px rgba(212, 60, 44, .35); animation: rise2 .25s both; }
 .pro::before { content: ""; position: absolute; top: -7px; left: 28px; width: 12px; height: 12px; background: #fff; border-left: 1.5px solid var(--seal); border-top: 1.5px solid var(--seal); transform: rotate(45deg); }
 .pro-h { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .pro-why { font-size: 12.5px; color: var(--ink3); } .pro-why::before { content: "触发原因："; }
@@ -48,7 +47,7 @@
 
 /* ---------- 主动请求：右下角固定入口 ---------- */
 .fab { position: fixed; right: 24px; bottom: 24px; z-index: 35; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 18px 0 9px; border-radius: 26px; background: #fff; border: 1px solid #d6d3ca;
-  box-shadow: 0 10px 28px -12px rgba(27, 30, 39, .35); transition: transform .12s, border-color .12s; }
+  box-shadow: 0 10px 28px -12px rgba(45, 48, 56, .22); transition: transform .12s, border-color .12s; }
 .fab:hover { transform: translateY(-2px); border-color: var(--seal); }
 .fab span:last-child { display: grid; line-height: 1.25; } .fab b { font-size: 14px; } .fab span i { font-style: normal; font-size: 11.5px; color: var(--ink3); }
 .fab.quiet { background: #fbfaf7; } .fab.quiet .xz { border-color: #c5c2b9; color: var(--ink3); box-shadow: none; }

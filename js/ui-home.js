@@ -37,7 +37,7 @@
   A.acts.node = (d) => { A.U.nodeId = d.id; A.U.drawer = 'node'; };
   A.acts.resume = () => A.go(D.STAGES[A.S.reached].id);
   A.acts.start = (d) => A.go(d.to);
-  A.acts.restart = () => { A.S = K.newSession(A.S.persona); A.U = A.freshU(); A._top = true; A.toast('学习记录已清空'); };
+  A.acts.restart = () => { const g = A.S.guide; A.S = K.newSession(A.S.persona); A.S.guide = g; A.U = A.freshU(); A._top = true; A.toast('学习记录已清空'); };
 
   /* 知识点详情抽屉 */
   A.drawers.node = () => { const n = D.TREE.flatMap((m) => m.nodes).find((x) => x.id === A.U.nodeId); const ch = D.TREE.find((m) => m.nodes.includes(n)); const s = A.nodeStatus(n); const S = A.S;

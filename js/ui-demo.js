@@ -1,13 +1,12 @@
 /* 知证 KnowProof · 演示台：汇报时使用，学生端不可见的内容都放在这里 */
 (function () {
   const A = window.A, D = A.D, K = A.K, L = A.L, esc = A.esc;
-  const fresh = (persona) => { A.S = K.newSession(persona); A.U = A.freshU(); A._top = true; };
+  const fresh = (persona) => { A.S = K.newSession(persona); A.S.guide = persona !== 'me'; A.U = A.freshU(); A._top = true; };
+  const PICK = { F: '推荐演示 ①', A: '推荐演示 ②' }, ORDER = ['F', 'A', 'B', 'C', 'D', 'E', 'me'], SCENE_PICK = { next: 1, hint: 1, deepen: 1 };
 
-  A.acts.persona = (d) => { fresh(d.id); const p = D.PERSONAS[d.id]; A.toast(d.id === 'me' ? '已切换为自己作答' : `已切换为模拟学生：${p.name}（${p.tag}）`); };
+  A.acts.persona = (d) => { fresh(d.id); const p = D.PERSONAS[d.id]; A.toast(d.id === 'me' ? '已切换为自己作答' : `${p.name}（${p.tag}）：点页面顶部的「下一步」逐步演示`); };
   A.acts.scene = (d) => { const sc = L.SCENES.find((x) => x.id === d.id); fresh(sc.persona); K.autoTo(A.S, sc.to);
     if (sc.star4) { K.starSubmit(A.S, 4, D.PERSONAS[sc.persona].script.star4); A.S.path.choice = '完成四星任务'; A.U.starRes = 4; } A.toast(sc.note); };
-  A.acts.dauto = () => { const S = A.S; if (S.stage === 'report') return A.toast('已经是最后一个环节'); K.auto(S); A.U = A.freshU(); A._top = true; };
-  A.acts.djump = (d) => { const S = A.S; if (K.stageIdx(d.to) > K.stageIdx(S.stage)) K.autoTo(S, d.to); else K.go(S, d.to); A.U = A.freshU(); A._top = true; };
   A.acts.dfill = (d) => { const p = D.PROG[d.prog]; A.sst(d.key, p).code = d.v === 'ok' ? p.sampleOk : p.sampleBad; A.U.syntax = null; A.U.drawer = null; A.toast(d.v === 'ok' ? '已填入可通过的代码' : '已填入仍有错误的代码'); };
   A.acts.dfillv = () => { const V = D.VERIFY; A.U.code.vcode = { ch: { mid: '1', cond: 'lt', t: 'l=mid', f: 'r=mid-1', post: 'lt' }, runs: [], last: null }; V.mcq.forEach((q) => { A.U.pick[q.id] = q.answer; });
     A.sst('vprog', D.PROG[V.prog]).code = D.PROG[V.prog].sampleOk; A.U.drawer = null; A.toast('已填入 4 道题的参考答案'); };
@@ -27,14 +26,12 @@
     if (S.stage === 'verify' && (!S.verify.status || A.U.redo)) out.push(['vprog', 'vprog']); return out; };
 
   A.drawers.demo = () => { const S = A.S, st = D.STAGES[K.stageIdx(S.stage)], ds = L.DESIGN[S.stage]; const fl = fills(S);
-    const body = `<div class="demo-sec"><h3>当前环节的设计说明</h3><div class="design"><h4>${st.name}</h4><div class="inner">内部名称：${st.inner || st.name}</div>
-        <dl><div><dt>小证的形式</dt><dd>${ds.ai}</dd></div><div><dt>理论依据</dt><dd>${ds.theory}</dd></div><div><dt>设计机制</dt><dd>${ds.how}</dd></div><div><dt>不确定性与责任</dt><dd>${ds.risk}</dd></div></dl></div></div>
+    const body = `<div class="demo-sec"><h3>模拟学生 · 点击后逐步演示</h3><div class="personas">${ORDER.map((id) => D.PERSONAS[id]).map((p) => `<button class="persona${S.persona === p.id ? ' on' : ''}" data-act="persona" data-id="${p.id}"><b>${p.name}</b><span class="tag">${p.tag}</span>${PICK[p.id] ? `<span class="tag seal">${PICK[p.id]}</span>` : ''}
+        <p>${p.desc}</p>${p.outcome ? `<p class="oc">${p.outcome.join('<br>')}</p>` : ''}</button>`).join('')}</div><p class="faint small" style="margin-top:8px">点击一位学生，演示台会收起，页面顶部出现「下一步」按钮，每点一次推进一步（也可以按 → 键）。学生按预设表现作答，评估与路径仍由引擎实时计算。</p></div>
+      <div class="demo-sec"><h3>直达场景 · 一键跳到某个画面</h3><div class="scenes">${L.SCENES.map((sc) => `<button class="scene" data-act="scene" data-id="${sc.id}"><b>${sc.name}</b><span>${sc.note}</span>${SCENE_PICK[sc.id] ? '<span class="tag seal">推荐</span>' : ''}</button>`).join('')}</div></div>
+      <div class="demo-sec"><h3>当前环节的设计说明</h3><div class="design"><h4>${st.name}</h4><div class="inner">内部名称：${st.inner || st.name}</div>
+        <dl><div><dt>小证的形式</dt><dd>${ds.ai}</dd></div><div><dt>理论依据</dt><dd>${ds.theory}</dd></div><div><dt>设计机制</dt><dd>${ds.how}</dd></div></dl></div></div>
       <div class="demo-sec"><h3>小证的四种出现方式</h3><table class="tbl aimt"><thead><tr><th>方式</th><th>谁触发</th><th>界面形式</th><th>出现在哪里</th><th></th></tr></thead><tbody>${AIM.map((r) => `<tr><td><b>${A.MODES[r[0]][0]}</b><br><span class="faint small">${A.MODES[r[0]][1]}</span></td><td>${r[1]}</td><td>${r[2]}</td><td class="muted small">${r[3]}</td><td><button class="btn ghost sm" data-act="aidemo" data-m="${r[0]}">查看</button></td></tr>`).join('')}</tbody></table></div>
-      <div class="demo-sec"><h3>直达场景</h3><div class="scenes">${L.SCENES.map((sc) => `<button class="scene" data-act="scene" data-id="${sc.id}"><b>${sc.name}</b><span>${sc.note}</span></button>`).join('')}</div></div>
-      <div class="demo-sec"><h3>模拟学生</h3><div class="personas">${Object.values(D.PERSONAS).map((p) => `<button class="persona${S.persona === p.id ? ' on' : ''}" data-act="persona" data-id="${p.id}"><b>${p.name}</b><span class="tag">${p.tag}</span>
-        <p>${p.desc}</p>${p.outcome ? `<p class="oc">${p.outcome.join('<br>')}</p>` : ''}</button>`).join('')}</div><p class="faint small" style="margin-top:8px">切换学生会开始一次新的学习。模拟学生按预设表现作答，评估与路径仍由引擎实时计算。</p></div>
-      <div class="demo-sec"><h3>快进</h3><div class="rowbtns"><button class="btn sm" data-act="dauto">自动完成当前环节</button>${D.STAGES.slice(1).map((x) => `<button class="btn ghost sm${x.id === S.stage ? ' cur' : ''}" data-act="djump" data-to="${x.id}">${x.name}</button>`).join('')}</div>
-        <p class="faint small" style="margin-top:8px">快进时按当前模拟学生的预设表现作答${S.persona === 'me' ? '（「自己作答」时借用赵一鸣的预设）' : ''}。</p></div>
       ${fl.length || (S.stage === 'verify' && (!S.verify.status || A.U.redo)) ? `<div class="demo-sec"><h3>快捷填入</h3><div class="rowbtns">${fl.map(([k, p]) => `<button class="btn ghost sm" data-act="dfill" data-key="${k}" data-prog="${p}" data-v="ok">编程题：填入正确代码</button><button class="btn ghost sm" data-act="dfill" data-key="${k}" data-prog="${p}" data-v="bad">编程题：填入错误代码</button>`).join('')}
         ${S.stage === 'verify' ? '<button class="btn ghost sm" data-act="dfillv">独立检测：填入全部参考答案</button>' : ''}</div></div>` : ''}
       <div class="demo-sec"><h3>异常情况演示</h3><label class="swt"><input type="checkbox" data-chk="llm"${S.flags.llmBad ? ' checked' : ''}><span><b>模拟大模型输出不合规</b><br><span class="muted small">模型推荐了内容库之外的练习。规则校验会拒绝该输出并按规则回退，可在「练习结果 → 查看评估依据」中看到。需在进阶练习开始前打开。</span></span></label></div>
