@@ -59,20 +59,22 @@ body.ov .frame{display:block;cursor:pointer}body.ov .frame.on{outline:3px solid 
 .s01 .top{display:none}
 .s01{padding:44px 64px 34px;background:linear-gradient(180deg,#fffdf9 0,#faf8f2 100%)}
 .s01 .course{display:flex;justify-content:space-between;font-size:15px;color:var(--ink2);letter-spacing:.04em}
-.s01 .hero{display:flex;align-items:center;gap:30px;margin-top:88px}
+.s01 .hero{display:flex;align-items:center;gap:30px;margin-top:100px}
 .s01 .hero svg{width:124px;height:124px;flex:none;filter:drop-shadow(0 6px 14px rgba(200,50,31,.22))}
 .s01 h1{font-family:var(--serif);font-size:76px;line-height:1.1;margin:0;letter-spacing:.02em}
 .s01 h1 span{font-family:var(--sans);font-weight:300;color:var(--ink2);font-size:60px;margin-left:12px;letter-spacing:0}
 .s01 .pos{font-size:25px;margin:12px 0 0;color:var(--ink)}
 .s01 .say{margin:52px 0 0;padding:2px 0 2px 20px;border-left:4px solid var(--seal);font-family:var(--serif);font-size:27px;line-height:1.6}
 .s01 .say em{font-style:normal;color:var(--seal)}
-.s01 .claims{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:auto}
+.s01 .claims{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px}
 .s01 .claims .card{padding:22px 24px 22px}
 .s01 .claims b.n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--seal);color:#fff;font-family:var(--serif);font-size:15px;margin-right:9px;vertical-align:1px}
 .s01 .claims h3{font-size:21px;margin:0 0 8px}
 .s01 .claims p{font-size:16px;line-height:1.6}
-.s01 .foot{margin-top:18px;font-size:13.5px;color:var(--ink2)}
+.s01 .foot{margin-top:auto;font-size:13.5px;color:var(--ink2)}
 .s01 .foot i{font-style:normal;color:var(--ink3)}
+.s01 .foot .tm{font-size:17px;color:var(--ink);letter-spacing:.04em}
+.s01 .foot .tm b{font-weight:600;padding-right:14px;margin-right:14px;border-right:1px solid var(--line)}
 
 .s02 .body{grid-template-columns:350px 1fr;gap:20px}
 .s02 .who{display:flex;flex-direction:column;gap:18px}
@@ -248,7 +250,7 @@ body.ov .frame{display:block;cursor:pointer}body.ov .frame.on{outline:3px solid 
 <div class="card"><h3><b class="n">二</b>诊断先于支持</h3><p>先弄清卡在哪一项能力，再决定帮什么、帮多少。</p></div>
 <div class="card"><h3><b class="n">三</b>支持不等于掌握</h3><p>提示下做对不算学会；撤掉提示后独立通过才算。</p></div>
 </div>
-<div class="foot"><span>小组成员：<span contenteditable="true" spellcheck="false" id="team">（请在此填写姓名）</span></span><span class="pg">01 / 10</span></div>
+<div class="foot"><span class="tm"><b>轻松绷组</b><span contenteditable="true" spellcheck="false" id="team">宋敏齐　王浩名　郑浩敏</span></span><span class="pg">01 / 10</span></div>
 </section></div>
 <div class="frame"><section class="slide s02" aria-label="第 2 页 学习问题与情境">
 <div class="top"><span class="brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="知证 KnowProof"><defs><linearGradient id="lg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4553f"/><stop offset="1" stop-color="#c8321f"/></linearGradient></defs><path d="M17 4h30a13 13 0 0 1 13 13v30a13 13 0 0 1-13 13H17A13 13 0 0 1 4 47V17A13 13 0 0 1 17 4z" fill="url(#lg3)"/><rect x="7.6" y="7.6" width="48.8" height="48.8" rx="10" fill="none" stroke="#fffaf3" stroke-opacity=".42" stroke-width="1.3"/><g transform="translate(32 32.5) scale(.87) translate(-31.4 -31)" fill="none" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5l4.2 3.4M28 16h23.5M39.8 16v31M39.8 31h10.2M31 31v16M25.5 47h28.5" stroke="#fffaf3"/><path d="M8 32.5l6.2 13 8-18.5" stroke="#f5cc6e"/></g></svg>知证 KnowProof<i>· 期中汇报</i></span><span class="sec"><b>02</b>学习问题与情境<span class="rub">评分项 · 学习问题与情境 20</span></span></div>
@@ -543,7 +545,7 @@ cout &lt;&lt; l;</pre>
 <tr><th>风险</th><th><i style="background:#2f9474"></i>原型里现在的做法</th><th><i style="background:#d43c2c"></i>还没有解决的</th></tr>
 <tr><td>诊断可靠性<small>系统会不会判断错</small></td><td>结论分三档：初步评估 → 已确认 → 已验证；没有证据写「未评估」</td><td>题量小；题目与规则未经教练审校</td></tr>
 <tr><td>AI 依赖<small>会不会靠提示过关</small></td><td>提示最多四级，不给完整答案；辅导中做对不计入掌握</td><td>撤掉提示后能否保持，还没有数据</td></tr>
-<tr><td>效果验证<small>到底有没有用</small></td><td>只做了设计走查：六个模拟用例、T01–T10 测试用例</td><td>是否促进学习，还不知道</td></tr>
+<tr><td>效果验证<small>到底有没有用</small></td><td>只做了设计走查：六个模拟学生用例走通全流程</td><td>是否促进学习，还不知道</td></tr>
 <tr><td>数据与代码执行安全<small>未成年人数据、运行学生代码</small></td><td>无后端、无账号，记录只存本机；代码在受限解释器中运行</td><td>正式版需要服务端沙箱与数据保护</td></tr>
 </table></div>
 <div class="nx">
@@ -606,8 +608,8 @@ cout &lt;&lt; l;</pre>
   zoom.addEventListener('click', function (e) { e.stopPropagation(); zoom.classList.remove('on'); });
   // 封面的小组成员可直接点击修改，保存在本机浏览器
   var team = document.getElementById('team');
-  try { var t = localStorage.getItem('kp_mid_team'); if (t) team.textContent = t; } catch (e) {}
-  team.addEventListener('blur', function () { try { localStorage.setItem('kp_mid_team', team.textContent.trim()); } catch (e) {} });
+  try { var t = localStorage.getItem('kp_mid_team2'); if (t) team.textContent = t; } catch (e) {}
+  team.addEventListener('blur', function () { try { localStorage.setItem('kp_mid_team2', team.textContent.trim()); } catch (e) {} });
   addEventListener('resize', fit); addEventListener('hashchange', function () { show((parseInt(location.hash.slice(1), 10) || 1) - 1, true); });
   fit(); show((parseInt(location.hash.slice(1), 10) || 1) - 1, true);
 })();
